@@ -7,7 +7,7 @@ spec:
   groups:
     - name: lightspeed-stack.llm
       rules:
-        - alert: LightspeedOpenAIProviderSpike
+        - alert: DevelopmentLightspeedOpenAIProviderSpike
           expr: |
             rate(ls_llm_calls_total{provider="openai"}[5m])
             > 10 * rate(ls_llm_calls_total{provider="openai"}[1h])

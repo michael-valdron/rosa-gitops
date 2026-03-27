@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: rhdhai-rhdh-dev-rules
+  namespace: rhdhai-development
+spec:
+  groups:
+    - name: lightspeed-stack.llm
+      rules:
+        - alert: LightspeedOpenAIProviderSpike
+          expr: |
+            rate(ls_llm_calls_total{provider="openai"}[5m])
+            > 10 * rate(ls_llm_calls_total{provider="openai"}[1h])
+          for: 5m
+          labels:
+            severity: warning
+            alert_route: slack
+          annotations:
+            summary: "OpenAI provider LLM call spike detected (model: `{{ $labels.model }}`)"
+            description: "The 5-minute LLM call rate for provider `openai`, model `{{ $labels.model }}` is more than 3x the 1-hour baseline rate, suggesting an unusual traffic spike."
+
+    - name: rhdhai-rhdh-dev.health
+      rules:
+        - alert: RhdhaiRhdhDevPodNotReady
+          expr: |
+            max by (pod, namespace, phase) (
+              kube_pod_status_phase{namespace="rhdhai-development", phase=~"Pending|Failed"} == 1
+            )
+          for: 10m
+          labels:
+            severity: critical
+            alert_route: slack
+          annotations:
+            summary: "Pod `{{ $labels.pod }}` stuck in `{{ $labels.phase }}` phase"
+            description: "Pod `{{ $labels.pod }}` in namespace `{{ $labels.namespace }}` has been in `{{ $labels.phase }}` phase for more than 1 hour."

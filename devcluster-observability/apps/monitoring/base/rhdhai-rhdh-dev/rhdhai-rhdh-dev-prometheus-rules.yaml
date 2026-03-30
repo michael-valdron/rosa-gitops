@@ -17,7 +17,7 @@ spec:
             alert_route: slack
           annotations:
             summary: "OpenAI provider LLM call spike detected (model: `{{ $labels.model }}`)"
-            description: "The 5-minute LLM call rate for provider `openai`, model `{{ $labels.model }}` is more than 3x the 1-hour baseline rate, suggesting an unusual traffic spike."
+            description: "The 5-minute LLM call rate for provider `openai`, model `{{ $labels.model }}` is more than 10x the 1-hour baseline rate, suggesting an unusual traffic spike."
 
     - name: rhdhai-rhdh-dev.health
       rules:

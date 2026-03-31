@@ -27,6 +27,9 @@ Available alerts are:
 
 - **VllmPodNotReady** (critical, `vllm` namespace) — fires when any pod in the `vllm` namespace is stuck in Pending or Failed phase for more than 1 hour
 - **RollingDemoPodNotReady** (critical, `rolling-demo-ns` namespace) — fires when any pod in the `rolling-demo-ns` namespace is stuck in Pending or Failed phase for more than 1 hour
+- **RhdhaiRhdhDevPodNotReady** (critical, `rhdhai-development` namespace) — fires when any pod in the `rhdhai-development` namespace is stuck in Pending or Failed phase for more than 1 hour
+- **LightspeedOpenAIProviderSpike** (warning) — sends a warning to slack if the last 5mins usage is >10 times bigger than the daily average has been spot to any openai model.
+- **DevelopmentLightspeedOpenAIProviderSpike** (warning - `rhdhai-development` namespace) sends a warning to slack if the last 5mins usage is >10 times bigger than the daily average has been spot to any openai model.
 
 ## Required Pre-existing Secrets
 
@@ -74,7 +77,7 @@ Keys:
 ## Installation
 
 1. Ensure the **Grafana Operator** and **Prometheus Operator** are installed on the cluster.
-2. Ensure the `devcluster-monitoring`, `vllm`, `rolling-demo-ns` namespaces already exist in your cluster.
+2. Ensure the `devcluster-monitoring`, `vllm`, `rolling-demo-ns`, `rhdhai-development` namespaces already exist in your cluster.
 3. Enable **user-workload monitoring** on the cluster (required for ServiceMonitor scraping in user namespaces):
    ```bash
    oc apply -f - <<EOF
@@ -111,6 +114,7 @@ Keys:
    WEBHOOK_URL='https://hooks.slack.com/services/YOUR/APP/WEBHOOK'
    oc create secret generic webhook-secret -n vllm --from-literal=webhook-url="$WEBHOOK_URL"
    oc create secret generic webhook-secret -n rolling-demo-ns --from-literal=webhook-url="$WEBHOOK_URL"
+   oc create secret generic webhook-secret -n rhdhai-development --from-literal=webhook-url="$WEBHOOK_URL"
    ```
 6. Create the **grafana-admin** to store your admin's credentials:
    ```bash

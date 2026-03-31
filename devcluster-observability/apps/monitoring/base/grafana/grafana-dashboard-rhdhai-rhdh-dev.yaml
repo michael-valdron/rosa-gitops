@@ -1,7 +1,7 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: rolling-demo-health
+  name: rhdhai-rhdh-dev-health
   namespace: devcluster-monitoring
   annotations:
     argocd.argoproj.io/sync-wave: "3"
@@ -13,8 +13,8 @@ spec:
   folderRef: rhdh-ai-observability
   json: >
     {
-      "uid": "rolling-demo-health",
-      "title": "Rolling Demo Health",
+      "uid": "rhdhai-rhdh-dev-health",
+      "title": "RHDHAI RHDH Dev Health",
       "schemaVersion": 39,
       "version": 1,
       "refresh": "30s",
@@ -23,14 +23,14 @@ spec:
 
         {
           "type": "row",
-          "title": "Pod Health (rolling-demo-ns)",
+          "title": "Pod Health (rhdhai-development)",
           "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 }
         },
 
         {
           "type": "stat",
           "title": "Failed Pods",
-          "description": "Number of pods in Failed phase in rolling-demo-ns.",
+          "description": "Number of pods in Failed phase in rhdhai-development.",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "gridPos": { "x": 0, "y": 1, "w": 6, "h": 5 },
           "fieldConfig": {
@@ -39,14 +39,14 @@ spec:
             }
           },
           "targets": [
-            { "expr": "count(kube_pod_status_phase{namespace=\"rolling-demo-ns\", phase=\"Failed\"} == 1) or vector(0)", "instant": true }
+            { "expr": "count(kube_pod_status_phase{namespace=\"rhdhai-development\", phase=\"Failed\"} == 1) or vector(0)", "instant": true }
           ]
         },
 
         {
           "type": "stat",
           "title": "Pending Pods",
-          "description": "Number of pods in Pending phase in rolling-demo-ns.",
+          "description": "Number of pods in Pending phase in rhdhai-development.",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "gridPos": { "x": 6, "y": 1, "w": 6, "h": 5 },
           "fieldConfig": {
@@ -55,14 +55,14 @@ spec:
             }
           },
           "targets": [
-            { "expr": "count(kube_pod_status_phase{namespace=\"rolling-demo-ns\", phase=\"Pending\"} == 1) or vector(0)", "instant": true }
+            { "expr": "count(kube_pod_status_phase{namespace=\"rhdhai-development\", phase=\"Pending\"} == 1) or vector(0)", "instant": true }
           ]
         },
 
         {
           "type": "stat",
           "title": "Running Pods",
-          "description": "Number of pods in Running phase in rolling-demo-ns.",
+          "description": "Number of pods in Running phase in rhdhai-development.",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "gridPos": { "x": 12, "y": 1, "w": 6, "h": 5 },
           "fieldConfig": {
@@ -71,18 +71,18 @@ spec:
             }
           },
           "targets": [
-            { "expr": "count(kube_pod_status_phase{namespace=\"rolling-demo-ns\", phase=\"Running\"} == 1) or vector(0)", "instant": true }
+            { "expr": "count(kube_pod_status_phase{namespace=\"rhdhai-development\", phase=\"Running\"} == 1) or vector(0)", "instant": true }
           ]
         },
 
         {
           "type": "timeseries",
           "title": "Container Restarts",
-          "description": "Rate of container restarts in rolling-demo-ns.",
+          "description": "Rate of container restarts in rhdhai-development.",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "gridPos": { "x": 18, "y": 1, "w": 6, "h": 5 },
           "targets": [
-            { "expr": "sum by (pod) (rate(kube_pod_container_status_restarts_total{namespace=\"rolling-demo-ns\"}[5m]))", "legendFormat": "{{ pod }}" }
+            { "expr": "sum by (pod) (rate(kube_pod_container_status_restarts_total{namespace=\"rhdhai-development\"}[5m]))", "legendFormat": "{{ pod }}" }
           ]
         },
 
@@ -99,7 +99,7 @@ spec:
           "gridPos": { "x": 0, "y": 7, "w": 6, "h": 6 },
           "targets": [
             {
-              "expr": "max(up{namespace=\"rolling-demo-ns\"})",
+              "expr": "max(up{namespace=\"rhdhai-development\"})",
               "instant": true
             }
           ]
@@ -113,7 +113,7 @@ spec:
           "fieldConfig": { "defaults": { "unit": "s" } },
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_duration_bucket{namespace=\"rolling-demo-ns\"}[10m])))"
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_duration_bucket{namespace=\"rhdhai-development\"}[10m])))"
             }
           ]
         },
@@ -130,7 +130,7 @@ spec:
           "datasource": { "type": "prometheus", "uid": "prometheus-user-workload" },
           "gridPos": { "x": 0, "y": 14, "w": 6, "h": 6 },
           "targets": [
-            { "expr": "max(catalog_entities_count{namespace=\"rolling-demo-ns\"})", "instant": true }
+            { "expr": "max(catalog_entities_count{namespace=\"rhdhai-development\"})", "instant": true }
           ]
         },
 
@@ -141,7 +141,7 @@ spec:
           "gridPos": { "x": 6, "y": 14, "w": 12, "h": 6 },
           "fieldConfig": { "defaults": { "unit": "ops" } },
           "targets": [
-            { "expr": "rate(catalog_processed_entities_count_total{namespace=\"rolling-demo-ns\"}[5m])" }
+            { "expr": "rate(catalog_processed_entities_count_total{namespace=\"rhdhai-development\"}[5m])" }
           ]
         },
 
@@ -153,7 +153,7 @@ spec:
           "fieldConfig": { "defaults": { "unit": "s" } },
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum by (le) (rate(catalog_processing_duration_bucket{namespace=\"rolling-demo-ns\"}[10m])))"
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(catalog_processing_duration_bucket{namespace=\"rhdhai-development\"}[10m])))"
             }
           ]
         },
@@ -164,7 +164,7 @@ spec:
           "datasource": { "type": "prometheus", "uid": "prometheus-user-workload" },
           "gridPos": { "x": 0, "y": 20, "w": 12, "h": 6 },
           "targets": [
-            { "expr": "catalog_stitching_queue_length{namespace=\"rolling-demo-ns\"}" }
+            { "expr": "catalog_stitching_queue_length{namespace=\"rhdhai-development\"}" }
           ]
         },
 
@@ -180,7 +180,7 @@ spec:
           "datasource": { "type": "prometheus", "uid": "prometheus-user-workload" },
           "gridPos": { "x": 0, "y": 27, "w": 12, "h": 6 },
           "targets": [
-            { "expr": "rate(backend_tasks_task_runs_count_total{namespace=\"rolling-demo-ns\"}[5m])" }
+            { "expr": "rate(backend_tasks_task_runs_count_total{namespace=\"rhdhai-development\"}[5m])" }
           ]
         },
 
@@ -192,7 +192,7 @@ spec:
           "fieldConfig": { "defaults": { "unit": "s" } },
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum by (le) (rate(backend_tasks_task_runs_duration_bucket{namespace=\"rolling-demo-ns\"}[10m])))"
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(backend_tasks_task_runs_duration_bucket{namespace=\"rhdhai-development\"}[10m])))"
             }
           ]
         },
@@ -210,7 +210,7 @@ spec:
           "gridPos": { "x": 0, "y": 34, "w": 12, "h": 6 },
           "fieldConfig": { "defaults": { "unit": "percentunit" } },
           "targets": [
-            { "expr": "nodejs_eventloop_utilization{namespace=\"rolling-demo-ns\"}" }
+            { "expr": "nodejs_eventloop_utilization{namespace=\"rhdhai-development\"}" }
           ]
         },
 
@@ -221,7 +221,7 @@ spec:
           "gridPos": { "x": 12, "y": 34, "w": 12, "h": 6 },
           "fieldConfig": { "defaults": { "unit": "s" } },
           "targets": [
-            { "expr": "nodejs_eventloop_delay_p99{namespace=\"rolling-demo-ns\"}" }
+            { "expr": "nodejs_eventloop_delay_p99{namespace=\"rhdhai-development\"}" }
           ]
         },
 
@@ -232,7 +232,7 @@ spec:
           "gridPos": { "x": 0, "y": 40, "w": 12, "h": 6 },
           "fieldConfig": { "defaults": { "unit": "bytes" } },
           "targets": [
-            { "expr": "v8js_memory_heap_used{namespace=\"rolling-demo-ns\"}" }
+            { "expr": "v8js_memory_heap_used{namespace=\"rhdhai-development\"}" }
           ]
         },
 
@@ -243,7 +243,7 @@ spec:
           "gridPos": { "x": 12, "y": 40, "w": 12, "h": 6 },
           "fieldConfig": { "defaults": { "unit": "percentunit" } },
           "targets": [
-            { "expr": "process_cpu_utilization{namespace=\"rolling-demo-ns\"}" }
+            { "expr": "process_cpu_utilization{namespace=\"rhdhai-development\"}" }
           ]
         }
 

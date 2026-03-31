@@ -1,13 +1,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: rolling-demo-rules
-  namespace: rolling-demo-ns
+  name: rhdhai-rhdh-dev-rules
+  namespace: rhdhai-development
 spec:
   groups:
     - name: lightspeed-stack.llm
       rules:
-        - alert: LightspeedOpenAIProviderSpike
+        - alert: DevelopmentLightspeedOpenAIProviderSpike
           expr: |
             rate(ls_llm_calls_total{provider="openai"}[5m])
             > 10 * rate(ls_llm_calls_total{provider="openai"}[1h])
@@ -19,12 +19,12 @@ spec:
             summary: "OpenAI provider LLM call spike detected (model: `{{ $labels.model }}`)"
             description: "The 5-minute LLM call rate for provider `openai`, model `{{ $labels.model }}` is more than 10x the 1-hour baseline rate, suggesting an unusual traffic spike."
 
-    - name: rolling-demo.health
+    - name: rhdhai-rhdh-dev.health
       rules:
-        - alert: RollingDemoPodNotReady
+        - alert: RhdhaiRhdhDevPodNotReady
           expr: |
             max by (pod, namespace, phase) (
-              kube_pod_status_phase{namespace="rolling-demo-ns", phase=~"Pending|Failed"} == 1
+              kube_pod_status_phase{namespace="rhdhai-development", phase=~"Pending|Failed"} == 1
             )
           for: 1h
           labels:

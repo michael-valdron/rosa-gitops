@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: lightspeed-stack-metrics
+  namespace: rhdhai-development
+spec:
+  namespaceSelector:
+    matchNames:
+      - rhdhai-development
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: backstage
+      app.kubernetes.io/instance: rhdhai-rhdh-dev
+  podMetricsEndpoints:
+    - port: lcs-backend
+      path: /metrics
+      interval: 30s
+      scheme: http
